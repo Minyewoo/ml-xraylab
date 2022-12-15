@@ -1,0 +1,13 @@
+.header {
+    position: sticky;
+    top: 0;
+    background-color: var(--color-header);
+}
+
+.headerContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    min-height: 64px;
+}
