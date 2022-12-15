@@ -1,0 +1,80 @@
+$border-size: 3px;
+
+.btn {
+    background: none;
+    border: none;
+    color: var(--btn-color);
+    font-weight: 500;
+    font-size: var(--btn-font-size);
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:disabled {
+        pointer-events: none;
+        border-bottom: $border-size solid rgba($color: #000000, $alpha: 0);
+    }
+}
+
+.variant_primary {
+    --btn-color: var(--color-primary);
+
+    &:hover {
+        --btn-color: var(--color-primary);
+    }
+}
+
+.variant_secondary {
+    --btn-color: var(--color-secondary);
+
+    &:hover {
+        --btn-color: var(--color-primary);
+    }
+}
+
+.variant_colored {
+    --btn-color: var(--color-blue);
+
+    &:hover {
+        --btn-color: var(--color-primary);
+    }
+}
+
+.variant_white {
+    --btn-color: var(--color-white);
+
+    &:hover {
+        --btn-color: var(--color-white);
+    }
+}
+
+.size_s {
+    --btn-font-size: var(--font-size-base);
+}
+
+.size_m {
+    --btn-font-size: var(--font-size-md);
+}
+
+.size_l {
+    --btn-font-size: var(--font-size-lg);
+}
+
+.size_xl {
+    --btn-font-size: var(--font-size-xl);
+}
+
+.type_text {
+    border-bottom: $border-size solid rgba($color: #000000, $alpha: 0);
+
+    &:hover {
+        border-bottom: $border-size solid var(--btn-color);
+    }
+}
+
+.type_dashed {
+    border-bottom: $border-size dashed var(--btn-color);
+
+    &:hover {
+        border-bottom: $border-size solid var(--btn-color);
+    }
+}
