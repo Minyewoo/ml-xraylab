@@ -21,3 +21,9 @@ build
 .vscode/*
 !.vscode/settings.json
 !.vscode/launch.json
+
+# Environment
+.env
+
+# Development
+/dev-server

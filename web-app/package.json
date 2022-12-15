@@ -3,16 +3,22 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "@reduxjs/toolkit": "^1.9.1",
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^13.4.0",
         "@testing-library/user-event": "^13.5.0",
+        "classnames": "^2.3.2",
+        "dayjs": "^1.11.7",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
+        "react-redux": "^8.0.5",
         "react-scripts": "5.0.1",
         "web-vitals": "^2.1.4"
     },
     "scripts": {
         "start": "react-scripts start",
+        "server": "json-server --watch dev-server/db.json --host 0.0.0.0 --port 3030",
+        "dev": "concurrently \"npm run server\" \"npm run start\"",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
@@ -36,13 +42,17 @@
         ]
     },
     "devDependencies": {
+        "concurrently": "^7.6.0",
         "eslint": "^8.25.0",
         "eslint-config-airbnb": "^19.0.4",
         "eslint-config-prettier": "^8.5.0",
+        "eslint-import-resolver-jsconfig": "^1.1.0",
         "eslint-plugin-import": "^2.26.0",
         "eslint-plugin-jsx-a11y": "^6.6.1",
         "eslint-plugin-react": "^7.31.10",
         "eslint-plugin-react-hooks": "^4.6.0",
-        "prettier": "^2.7.1"
+        "json-server": "^0.17.1",
+        "prettier": "^2.7.1",
+        "sass": "^1.56.1"
     }
 }
