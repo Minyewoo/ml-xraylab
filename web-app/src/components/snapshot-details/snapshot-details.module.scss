@@ -1,0 +1,16 @@
+// TODO: replace breakpoints
+.left {
+    order: 0;
+
+    @media (max-width: 768px) {
+        order: 1;
+    }
+}
+
+.right {
+    order: 1;
+
+    @media (max-width: 768px) {
+        order: 0;
+    }
+}

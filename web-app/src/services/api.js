@@ -7,7 +7,10 @@ export const api = createApi({
         getScans: builder.query({
             query: () => 'scans',
         }),
+        getScanById: builder.query({
+            query: id => `scans/${id}`,
+        }),
     }),
 });
 
-export const { useGetScansQuery } = api;
+export const { useGetScansQuery, useGetScanByIdQuery } = api;

@@ -1,0 +1,29 @@
+$label-width: 92px;
+
+.label {
+    position: relative;
+    display: block;
+    margin-bottom: 16px;
+
+    > span {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: $label-width;
+        font-weight: 500;
+        font-size: var(--font-size-md);
+        // TODO: add background color;
+        background-color: var(--color-white);
+    }
+}
+
+.note {
+    width: 100%;
+    padding: 0 8px;
+    text-indent: $label-width;
+    font-weight: 500;
+    font-size: var(--font-size-md);
+    background-color: var(--color-light-blue);
+    border: none;
+    resize: none;
+}

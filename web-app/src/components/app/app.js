@@ -1,13 +1,14 @@
 import { Provider } from 'react-redux';
 import store from 'store';
 
-// Testing page
-import ProfilePage from 'components/pages/profile-page';
+// Testing pages
+// import ProfilePage from 'components/pages/profile-page';
+import SnapshotDetailsPage from 'components/pages/snapshot-details-page/snapshot-details-page';
 
 function App() {
     return (
         <Provider store={store}>
-            <ProfilePage />
+            <SnapshotDetailsPage id={1} />
         </Provider>
     );
 }

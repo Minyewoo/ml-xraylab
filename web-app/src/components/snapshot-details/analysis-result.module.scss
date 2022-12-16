@@ -1,0 +1,39 @@
+.table {
+    width: 100%;
+    border-spacing: 8px 4px;
+
+    tr {
+        > th {
+            width: 50%;
+            font-size: var(--font-size-md);
+            cursor: pointer;
+
+            &:nth-child(1) {
+                text-align: end;
+            }
+
+            &:nth-child(2) {
+                text-align: start;
+            }
+
+            > span {
+                display: inline-flex;
+                align-items: center;
+            }
+        }
+
+        > td {
+            width: 50%;
+            font-size: var(--font-size-lg);
+
+            &:nth-child(1) {
+                text-align: end;
+            }
+
+            &:nth-child(2) {
+                font-family: monospace;
+                text-align: start;
+            }
+        }
+    }
+}
