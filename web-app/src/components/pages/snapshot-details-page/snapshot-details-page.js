@@ -1,8 +1,11 @@
+import { useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import MainLayout from 'components/layouts/main-layout';
 import SnapshotDetails from 'components/snapshot-details';
 
-function SnapshotDetailsPage({ id }) {
+function SnapshotDetailsPage() {
+    const { id } = useParams();
+
     return (
         <MainLayout>
             <SnapshotDetails

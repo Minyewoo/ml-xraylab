@@ -1,15 +1,14 @@
 import { Provider } from 'react-redux';
 import store from 'store';
-
-// Testing pages
-// import ProfilePage from 'components/pages/profile-page';
-// import SnapshotDetailsPage from 'components/pages/snapshot-details-page/snapshot-details-page';
-import AuthPage from 'components/pages/auth-page';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { RoutesSwitcher } from 'components/routes';
 
 function App() {
     return (
         <Provider store={store}>
-            <AuthPage />
+            <Router>
+                <RoutesSwitcher />
+            </Router>
         </Provider>
     );
 }

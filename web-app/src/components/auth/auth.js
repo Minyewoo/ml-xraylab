@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { forwardRef } from 'react';
 import classNames from 'classnames';
-import TextInput from 'components/UI/text-input';
+import { TextInputForwardingRef as TextInput } from 'components/UI/text-input';
 import Button from 'components/UI/button';
 import styles from './auth.module.scss';
 

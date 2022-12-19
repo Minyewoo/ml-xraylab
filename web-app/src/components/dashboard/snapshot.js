@@ -1,11 +1,14 @@
 import classNames from 'classnames';
+import { useHistory } from 'react-router-dom';
+import { buildSnapshotsPath } from 'components/routes';
 import convertTimestampToDate from 'helpers/convertTimestampToDate';
 import { HighlightText, HighlightBlock } from 'components/UI/highlight';
 import ButtonLink from 'components/UI/button-link';
 import styles from './snapshot.module.scss';
 
 function Snapshot({ scan, className }) {
-    const { createdAt, note } = scan;
+    const history = useHistory();
+    const { createdAt, note, id } = scan;
 
     return (
         <div className={classNames(className, styles.card)}>
@@ -20,7 +23,12 @@ function Snapshot({ scan, className }) {
             </div>
             <div className={styles.linkContainer}>
                 <HighlightBlock variant="black">
-                    <ButtonLink type="dashed" variant="white" size="xl">
+                    <ButtonLink
+                        type="dashed"
+                        variant="white"
+                        size="xl"
+                        onClick={() => history.push(buildSnapshotsPath(id))}
+                    >
                         Посмотреть
                     </ButtonLink>
                 </HighlightBlock>
