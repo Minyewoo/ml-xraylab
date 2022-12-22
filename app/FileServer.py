@@ -3,8 +3,8 @@ import boto3
 # Yandex Object Storage Access
 cos = boto3.client(
     's3',
-    aws_access_key_id = 'YCAJEq23MSLvRBTVBkQ9-f4kS',
-    aws_secret_access_key = 'YCP51sph009N24z5-1fSyvoITeekQAlJbWTJgS31',
+    aws_access_key_id = 'your-access-key',
+    aws_secret_access_key = 'your-secret-key',
     region_name = 'ru-central1',
     endpoint_url = 'https://storage.yandexcloud.net'
 )
