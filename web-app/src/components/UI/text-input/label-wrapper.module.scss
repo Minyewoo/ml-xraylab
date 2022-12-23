@@ -1,0 +1,26 @@
+// TODO: add breakpoints vars
+.wrapper {
+    position: relative;
+    display: inline-block;
+
+    > .label {
+        position: absolute;
+        right: calc(100% + 16px);
+        color: var(--color-primary);
+        font-size: var(--font-size-lg);
+        font-weight: 400;
+
+        &.labelTop {
+            position: static;
+        }
+
+        &.labelSide {
+            position: absolute;
+            right: calc(100% + 16px);
+
+            @media (max-width: 576px) {
+                position: static;
+            }
+        }
+    }
+}
