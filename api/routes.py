@@ -106,20 +106,17 @@ def login():
     cursor = mysql.connection.cursor()
     if request.method == 'GET':
         return jsonify({"response": "Successfull GET request to Login page"})
+
     if request.method == 'POST':
-        # and 'username' in request.form and 'password' in request.form:
         try:
-            # username = request.form['username']
-            # password = request.form['password']
-            # content = request.get_json(silent=True)
             content = request.get_json()
             print(content)
-            print(content['username'])
+            print(content['email'])
             print(content['password'])
 
-            query = '''SELECT * FROM Users WHERE username = %s'''
+            query = '''SELECT * FROM Users WHERE email = %s'''
             # cursor.execute(query, (username, password))
-            cursor.execute(query, (content['username'], ))
+            cursor.execute(query, (content['email'], ))
 
             account = cursor.fetchone()
             print("Password ", account[2])
