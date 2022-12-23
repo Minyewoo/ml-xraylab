@@ -4,6 +4,9 @@
 .AppleDouble
 .LSOverride
 
+static/*
+!static/.gitkeep
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
