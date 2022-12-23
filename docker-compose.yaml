@@ -1,0 +1,36 @@
+version: "3"
+services:
+  rabbitmq:
+    hostname: rabbitmq
+    image: rabbitmq:3.9.25-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ./data/rabbitmq/:/var/lib/rabbitmq/
+    networks:
+      - rabbitmq_net
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+
+  inference:
+    build: ./ml/
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - INFERENCE_EXCHANGE_NAME=inference
+      - WEIGHTS_PATH=/app/weights/efficientnetb0.h5
+      - API_URL=http://app:5000/
+    volumes:
+      - ./ml/weights/:/app/weights/:ro
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+    networks:
+      - rabbitmq_net
+    
+networks:
+  rabbitmq_net:
+    driver: bridge
