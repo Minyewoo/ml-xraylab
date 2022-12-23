@@ -10,9 +10,9 @@ function SnapshotHeatmap({ className, imgURL, heatmapURL }) {
         <div className={className}>
             <div className={styles.snapshotContainer}>
                 {showHeatmap ? (
-                    <img src={imgURL} alt="" />
-                ) : (
                     <img src={heatmapURL} alt="" />
+                ) : (
+                    <img src={imgURL} alt="" />
                 )}
             </div>
             <div className={styles.toggle}>

@@ -32,7 +32,8 @@ function SignUp({ className }) {
 
                 startSession(token);
             } catch (err) {
-                console.log('Za shooooo', err);
+                // console.log('Za shooooo', err);
+                setError('Something went wrong, please try again.');
             }
         };
 

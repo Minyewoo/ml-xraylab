@@ -1,6 +1,9 @@
-/* eslint-disable no-unused-vars */
 import classNames from 'classnames';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
+import AuthContext from 'contexts/auth-context';
+import { useHistory } from 'react-router-dom';
+import { profilePath } from 'components/routes';
+import { useUploadSnapshotMutation } from 'services/api';
 import DragAndDrop from 'components/drag-and-drop';
 import Button from 'components/UI/button';
 import ButtonLink from 'components/UI/button-link';
@@ -37,10 +40,32 @@ function SnapshotUploader({ className }) {
         handleNewFiles(event.target.files);
     };
 
+    // TODO: rewrite mutation queries
+    const [uploadSnapshot] = useUploadSnapshotMutation();
+    const { token, clearSession } = useContext(AuthContext);
+    const history = useHistory();
+
     const handleSubmit = event => {
         event.preventDefault();
-        console.log(inputRef.current.files[0]);
-        clearFiles();
+        const handleSnapshotUploading = async () => {
+            const formData = new FormData();
+            formData.append('', inputRef.current.files[0]);
+
+            uploadSnapshot({
+                token,
+                data: formData,
+            })
+                .unwrap()
+                .then(res => {
+                    if (res.status === 401) {
+                        clearSession();
+                        return;
+                    }
+                    history.push(profilePath);
+                });
+        };
+
+        handleSnapshotUploading();
     };
 
     return (

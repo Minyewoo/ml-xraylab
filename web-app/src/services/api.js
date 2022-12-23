@@ -1,7 +1,23 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 // const baseUrl = 'http://localhost:3030/';
-const baseUrl = 'http://localhost:5090/';
+const baseUrl = 'http://localhost:4999/';
+
+const transformSnapshotData = data => {
+    const { conclusion, ...other } = data;
+    const conclusionDict = JSON.parse(conclusion);
+
+    delete conclusionDict['No Finding'];
+
+    return {
+        results: Object.keys(conclusionDict).map((key, idx) => ({
+            id: idx,
+            disease: key,
+            probability: conclusionDict[key],
+        })),
+        ...other,
+    };
+};
 
 export const api = createApi({
     reducerPath: 'api',
@@ -27,11 +43,34 @@ export const api = createApi({
                 },
             }),
         }),
-        getScans: builder.query({
-            query: () => 'scans',
+        uploadSnapshot: builder.mutation({
+            query: ({ data, token }) => ({
+                url: '/home/upload_image',
+                method: 'POST',
+                body: data,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }),
         }),
-        getScanById: builder.query({
-            query: id => `scans/${id}`,
+        getSnapshots: builder.query({
+            query: payload => ({
+                url: '/home/user_snapshots',
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${payload.token}`,
+                },
+            }),
+        }),
+        getSnapshotById: builder.query({
+            query: payload => ({
+                url: `/home/user_snapshots/${payload.id}`,
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${payload.token}`,
+                },
+            }),
+            transformResponse: response => transformSnapshotData(response),
         }),
     }),
 });
@@ -39,6 +78,7 @@ export const api = createApi({
 export const {
     useSignUpMutation,
     useSignInMutation,
-    useGetScansQuery,
-    useGetScanByIdQuery,
+    useGetSnapshotsQuery,
+    useGetSnapshotByIdQuery,
+    useUploadSnapshotMutation,
 } = api;

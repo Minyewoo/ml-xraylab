@@ -1,4 +1,4 @@
-import { Switch, Route, useHistory } from 'react-router-dom';
+import { Switch, Route, useHistory, Redirect } from 'react-router-dom';
 import { useContext } from 'react';
 import AuthContext from 'contexts/auth-context';
 
@@ -56,6 +56,7 @@ function Routes() {
                 path={snapshotsUploadPath}
                 component={SnapshotUploadPage}
             />
+            <Route path="/" element={<Redirect to={profilePath} />} />
         </Switch>
     );
 }
