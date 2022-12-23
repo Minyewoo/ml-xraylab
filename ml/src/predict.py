@@ -1,19 +1,11 @@
 from inference_config import InferenceConfig
 from utils import apply_heatmap, get_image, make_gradcam_heatmap, preprocess_image
-import tensorflow as tf
 from tensorflow import keras
-import cv2
-
 import numpy as np
-from tf_keras_vis.utils.model_modifiers import ReplaceToLinear
-from tf_keras_vis.saliency import Saliency
-from tensorflow.keras import activations
-from tf_keras_vis.utils.scores import CategoricalScore
-import matplotlib.cm as cm
 
 classes = ['No Finding', 'Atelectasis', 'Consolidation', 'Cardiomegaly', 'Infiltration', 'Pneumothorax', 'Edema', 'Emphysema', 'Fibrosis', 'Effusion', 'Pneumonia', 'Pleural_Thickening', 'Nodule', 'Mass', 'Hernia']
 
-def predict_diseases(snapshot_url, config):
+def predict_diseases(snapshot_url, config: InferenceConfig):
     image = get_image(snapshot_url)
 
     model = keras.models.load_model(config.weights_path)

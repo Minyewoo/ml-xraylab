@@ -3,7 +3,7 @@ use xraylab;
 
 
 CREATE TABLE Roles (
-id integer not null Primary Key,
+id integer AUTO_INCREMENT not null Primary Key,
 name varchar(100) not null
 );
 
@@ -17,7 +17,7 @@ FOREIGN KEY (role_id) REFERENCES Roles(id)
 );
 
 CREATE TABLE Snapshots (
-id integer not null Primary Key,
+id integer AUTO_INCREMENT not null Primary Key,
 note varchar(500),
 status varchar(100),
 image_path varchar(500),

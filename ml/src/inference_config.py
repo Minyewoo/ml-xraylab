@@ -27,17 +27,17 @@ class InferenceConfig:
             'password',
         )
 
-        response = requests.post(
-            f'{self.api_url}/login',
-            data={
-                'username': self.api_user,
-                'password': self.api_password,
-            },
-        )
-        if not response['token']:
-            raise Exception('No token found')
+        # response = requests.post(
+        #     f'{self.api_url}/login',
+        #     data={
+        #         'username': self.api_user,
+        #         'password': self.api_password,
+        #     },
+        # )
+        # if not response['token']:
+        #     raise Exception('No token found')
         
-        self.api_token=response['token']
+        # self.api_token=response['token']
 
         self.last_conv_layer = getenv(
             'LAST_CONV_LAYER',

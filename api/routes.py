@@ -104,6 +104,33 @@ def get_file(name):
         app.config['UPLOAD_FOLDER'], name
     )
 
+@app.route("/add_mask/<int:snapshot_id>", methods=("GET", "POST"), strict_slashes=False)
+def add_mask(snapshot_id):
+    if request.method == 'POST':
+        # cursor = mysql.connection.cursor()
+
+        file = request.files['mask']
+
+        if file.filename == '':
+            flash('No selected file')
+            # return redirect(request.url)
+            return jsonify({"response": "No selected file"})
+
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            cursor = mysql.connection.cursor()
+            upload_folder = app.config['UPLOAD_FOLDER']
+            img_url = os.path.join(upload_folder, filename)
+
+            UpdateQuery = '''UPDATE Snapshots SET mask_path=%s WHERE id=%s'''
+            cursor.execute(UpdateQuery, (img_url, snapshot_id,))
+            mysql.connection.commit()
+               
+            return jsonify({"message":"File uploaded successfully!",
+                                "image_url": img_url})
+
+
 ########################################
 ###   Function that performs Login   ###
 ########################################
@@ -528,36 +555,36 @@ def list_snapshot_id(current_user_id, id):
                             if content["image_path"] != data[3] and content["image_path"]:
                                 UpdateQuery = '''UPDATE Snapshots SET image_path=%s WHERE id=%s'''
                                 cursor.execute(UpdateQuery, (content["image_path"], id,))
-                                cursor.commit()
+                                mysql.connection.commit()
                         if "mask_path" in content:
                             if content["mask_path"] != data[4] and content["mask_path"]:
                                 UpdateQuery = '''UPDATE Snapshots SET mask_path=%s WHERE id=%s'''
                                 cursor.execute(UpdateQuery, (content["mask_path"], id,))
-                                cursor.commit()
+                                mysql.connection.commit()
                         if "conclusion" in content:
                             if content["conclusion"] != data[5] and content["conclusion"]:
                                 UpdateQuery = '''UPDATE Snapshots SET conclusion=%s WHERE id=%s'''
                                 cursor.execute(UpdateQuery, (content["conclusion"], id,))
-                                cursor.commit()
+                                mysql.connection.commit()
                         if "favorite" in content:
                             if content["favorite"] != data[8] and content["favorite"]:
                                 UpdateQuery = '''UPDATE Snapshots SET favorite=%s WHERE id=%s'''
                                 cursor.execute(UpdateQuery, (content["favorite"], id,))
-                                cursor.commit()
+                                mysql.connection.commit()
                         if "note" in content:
                             if content["note"] != data[1] and content["note"]:
                                 UpdateQuery = '''UPDATE Snapshots SET note=%s WHERE id=%s'''
                                 cursor.execute(UpdateQuery, (content["note"], id,))
-                                cursor.commit()
+                                mysql.connection.commit()
                         if "status" in content:
                             if content["status"] != data[2] and content["status"]:
                                 UpdateQuery = '''UPDATE Snapshots SET status=%s WHERE id=%s'''
                                 cursor.execute(UpdateQuery, (content["status"], id,))
-                                cursor.commit()
+                                mysql.connection.commit()
 
                         UpdateQuery = '''UPDATE Snapshots SET created_at=%s WHERE id=%s'''
                         cursor.execute(UpdateQuery, (datetime.datetime.now(), id))
-                        cursor.commit()
+                        mysql.connection.commit()
 
                         return jsonify({"response": "Updated successfully!"})
                     except Exception as e:
@@ -617,7 +644,7 @@ def upload_obj(current_user_id):
 
                 insert_query = '''INSERT INTO Snapshots (user_id, image_path, created_at) VALUES (%s, %s, %s)'''
                 cursor.execute(insert_query, (current_user_id, img_url, created_at,))
-                cursor.commit()
+                mysql.connection.commit()
 
                 send_for_inference(cursor.lastrowid, img_url)
 
