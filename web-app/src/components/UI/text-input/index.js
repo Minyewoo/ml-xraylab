@@ -1,3 +1,3 @@
-import TextInput from './text-input';
+import { TextInput, TextInputForwardingRef } from './text-input';
 
-export default TextInput;
+export { TextInput, TextInputForwardingRef };

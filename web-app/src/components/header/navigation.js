@@ -1,6 +1,6 @@
 import { useHistory } from 'react-router-dom';
 import classNames from 'classnames';
-import { profilePath, authPath } from 'components/routes';
+import { snapshotsUploadPath, profilePath, authPath } from 'components/routes';
 import ButtonLink from 'components/UI/button-link';
 import styles from './navigation.module.scss';
 
@@ -23,7 +23,9 @@ function Navigation({ className }) {
 
     return (
         <nav className={classNames(className, styles.navigation)}>
-            <HeaderLink>Новое сканирование</HeaderLink>
+            <HeaderLink onClick={() => history.push(snapshotsUploadPath)}>
+                Новое сканирование
+            </HeaderLink>
             <HeaderLink onClick={() => history.push(profilePath)}>
                 Профиль
             </HeaderLink>
