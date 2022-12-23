@@ -31,8 +31,8 @@ function SnapshotDetails({ id, className }) {
                     >
                         <SnapshotControls />
                         <SnapshotHeatmap
-                            imgURL={`http://localhost:4999/${data.image_path}`}
-                            heatmapURL={`http://localhost:4999/${data.mask_path}`}
+                            imgURL={`${process.env.REACT_APP_API_URL}/${data.image_path}`}
+                            heatmapURL={`${process.env.REACT_APP_API_URL}/${data.mask_path}`}
                         />
                         {/* <SnapshotNote note={data?.note} /> */}
                     </div>

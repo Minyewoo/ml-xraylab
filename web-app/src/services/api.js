@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-// const baseUrl = 'http://localhost:3030/';
-const baseUrl = 'http://localhost:4999/';
+const baseUrl = process.env.REACT_APP_API_URL;
 
 const transformSnapshotData = data => {
     const { conclusion, ...other } = data;

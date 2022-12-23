@@ -51,7 +51,10 @@ function Snapshot({ scan, className }) {
                 )}
             </div>
             <div className={styles.imageContainer}>
-                <img src={`http://localhost:4999/${imagePath}`} alt="" />
+                <img
+                    src={`${process.env.REACT_APP_API_URL}/${imagePath}`}
+                    alt=""
+                />
             </div>
         </div>
     );

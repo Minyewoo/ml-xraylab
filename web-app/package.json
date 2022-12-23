@@ -19,6 +19,7 @@
         "react-router-dom": "^5.2.0",
         "react-scripts": "5.0.1",
         "react-secure-storage": "^1.0.21",
+        "sass": "^1.57.1",
         "web-vitals": "^2.1.4"
     },
     "scripts": {
@@ -58,7 +59,6 @@
         "eslint-plugin-react": "^7.31.10",
         "eslint-plugin-react-hooks": "^4.6.0",
         "json-server": "^0.17.1",
-        "prettier": "^2.7.1",
-        "sass": "^1.56.1"
+        "prettier": "^2.7.1"
     }
 }
