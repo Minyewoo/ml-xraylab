@@ -1,0 +1,29 @@
+$padding: 2px;
+$line-spacing: 4px;
+
+.text {
+    display: inline;
+    padding: 0 $padding;
+    line-height: calc(100% + 2 * $line-spacing + 2 * $padding);
+}
+
+.block {
+    display: inline-block;
+    padding: $padding;
+}
+
+.variant_black {
+    background-color: var(--color-black);
+}
+
+.text_black {
+    color: var(--color-white);
+}
+
+.variant_colored {
+    background-color: var(--color-light-blue);
+}
+
+.text_colored {
+    color: var(--color-black);
+}

@@ -1,0 +1,22 @@
+.navigation {
+    display: flex;
+    justify-content: center;
+
+    ul {
+        display: flex;
+        flex-wrap: wrap;
+
+        li {
+            display: inline;
+            color: var(--color-primary);
+            font-size: var(--font-size-xl);
+            font-weight: 500;
+            white-space: nowrap;
+
+            &:not(:last-child)::after {
+                margin: 0 10px;
+                content: '/';
+            }
+        }
+    }
+}

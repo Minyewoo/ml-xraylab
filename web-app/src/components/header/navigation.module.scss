@@ -1,0 +1,9 @@
+.navigation {
+    .link:not(:last-child) {
+        margin-right: 32px;
+    }
+}
+
+.link {
+    font-weight: 700;
+}
