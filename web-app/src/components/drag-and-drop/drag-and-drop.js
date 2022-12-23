@@ -2,7 +2,7 @@ import { useState } from 'react';
 import classNames from 'classnames';
 import styles from './drag-and-drop.module.scss';
 
-const formatValidates = (formats, files) =>
+const formatsValidate = (formats, files) =>
     !files.some(file =>
         formats.some(format =>
             file.name.toLowerCase().endsWith(format.toLowerCase()),
@@ -34,7 +34,7 @@ function DragAndDrop({ onDrop, accept, children, className }) {
 
         const { files } = event.dataTransfer;
 
-        if (formatValidates(accept, [...files])) {
+        if (formatsValidate(accept, [...files])) {
             return;
         }
 

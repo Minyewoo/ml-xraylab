@@ -10,6 +10,11 @@
     }
 }
 
+.alert {
+    float: right;
+    color: var(--color-danger-red);
+}
+
 .submitWrapper {
     margin-top: 32px;
     display: flex;

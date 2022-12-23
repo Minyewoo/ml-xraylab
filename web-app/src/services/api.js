@@ -1,9 +1,32 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+// const baseUrl = 'http://localhost:3030/';
+const baseUrl = 'http://localhost:5090/';
+
 export const api = createApi({
     reducerPath: 'api',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3030/' }),
+    baseQuery: fetchBaseQuery({ baseUrl }),
     endpoints: builder => ({
+        signUp: builder.mutation({
+            query: payload => ({
+                url: '/register',
+                method: 'POST',
+                body: payload,
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+            }),
+        }),
+        signIn: builder.mutation({
+            query: payload => ({
+                url: '/login',
+                method: 'POST',
+                body: payload,
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+            }),
+        }),
         getScans: builder.query({
             query: () => 'scans',
         }),
@@ -13,4 +36,9 @@ export const api = createApi({
     }),
 });
 
-export const { useGetScansQuery, useGetScanByIdQuery } = api;
+export const {
+    useSignUpMutation,
+    useSignInMutation,
+    useGetScansQuery,
+    useGetScanByIdQuery,
+} = api;

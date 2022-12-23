@@ -33,6 +33,12 @@ function AuthFormInput({ type, label, caption, className, ...props }, ref) {
 
 const AuthFormInputFR = forwardRef(AuthFormInput);
 
+function AuthFormAlertMessage({ message, className }) {
+    return (
+        <span className={classNames(className, styles.alert)}>{message}</span>
+    );
+}
+
 function AuthFormSubmit({ children, className }) {
     return (
         <div className={classNames(className, styles.submitWrapper)}>
@@ -41,4 +47,9 @@ function AuthFormSubmit({ children, className }) {
     );
 }
 
-export { AuthForm, AuthFormInputFR as TextInput, AuthFormSubmit as Submit };
+export {
+    AuthForm,
+    AuthFormInputFR as TextInput,
+    AuthFormSubmit as Submit,
+    AuthFormAlertMessage as AlertMessage,
+};
