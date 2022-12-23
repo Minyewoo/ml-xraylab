@@ -32,3 +32,5 @@ FOREIGN KEY (user_id) REFERENCES Users(id)
 INSERT INTO Roles(id, name) VALUES (1, 'admin');
 INSERT INTO Roles(id, name) VALUES (2, 'doctor');
 INSERT INTO Roles(id, name) VALUES (3, 'user');
+
+INSERT INTO Users(id, username, password, e_mail, role_id) VALUES (1, 'inference', 'd38a068fd7943a39c6feef268f065e5132eb9d3328485339f6d81b282d2e235a', 'inference@kavo.com', 1);

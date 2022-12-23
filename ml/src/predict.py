@@ -13,9 +13,7 @@ import matplotlib.cm as cm
 
 classes = ['No Finding', 'Atelectasis', 'Consolidation', 'Cardiomegaly', 'Infiltration', 'Pneumothorax', 'Edema', 'Emphysema', 'Fibrosis', 'Effusion', 'Pneumonia', 'Pleural_Thickening', 'Nodule', 'Mass', 'Hernia']
 
-def predict_diseases(snapshot_url):
-    config = InferenceConfig()
-
+def predict_diseases(snapshot_url, config):
     image = get_image(snapshot_url)
 
     model = keras.models.load_model(config.weights_path)

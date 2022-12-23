@@ -1,6 +1,7 @@
 import datetime
 import os
-from flask import request, redirect, url_for, session, jsonify, flash
+from inference import send_for_inference
+from flask import request, redirect, url_for, session, jsonify, flash, send_from_directory
 from datetime import timezone
 import re
 from flask_login import (
@@ -11,10 +12,9 @@ from functools import wraps
 import jwt
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
-from FileServer import cos, get_obj_url
+# from FileServer import cos, get_obj_url
 from app import create_app
 import traceback
-
 ############################################################################
 ###   Section dedicated to file extensions and checking file extension   ###
 ############################################################################
@@ -97,6 +97,12 @@ login_manager.login_view = 'login'
 #     else:
 #         return redirect(url_for('login'))
 
+
+@app.route("/files/<path:name>")
+def get_file(name):
+    return send_from_directory(
+        app.config['UPLOAD_FOLDER'], name
+    )
 
 ########################################
 ###   Function that performs Login   ###
@@ -504,56 +510,64 @@ def list_snapshot_id(current_user_id, id):
     # Part that allows to UPDATE information in snapshot
     elif request.method == 'POST':
         try:
+            user_query = '''SELECT * from Users WHERE id=%s'''
+            cursor.execute(user_query, (current_user_id))
+            user_info = cursor.fetchone()
+            user_info['id'] = user_info['id'] or -1
+
             content = request.get_json(silent=True)
-            query = '''SELECT * from Snapshots WHERE user_id=%s and id=%s'''
-            cursor.execute(query, (current_user_id, id,))
+            query = '''SELECT * from Snapshots WHERE id=%s'''
+            cursor.execute(query, ( id,))
             data = cursor.fetchone()
+            data['user_id'] = data['user_id'] or -2
 
-            if content:
-                try:
-                    if "image_path" in content:
-                        if content["image_path"] != data[3] and content["image_path"]:
-                            UpdateQuery = '''UPDATE Snapshots SET image_path=%s WHERE user_id=%s and id=%s'''
-                            cursor.execute(UpdateQuery, (content["image_path"], current_user_id, id,))
-                            cursor.commit()
-                    if "mask_path" in content:
-                        if content["mask_path"] != data[4] and content["mask_path"]:
-                            UpdateQuery = '''UPDATE Snapshots SET mask_path=%s WHERE user_id=%s and id=%s'''
-                            cursor.execute(UpdateQuery, (content["mask_path"], current_user_id, id,))
-                            cursor.commit()
-                    if "conclusion" in content:
-                        if content["conclusion"] != data[5] and content["conclusion"]:
-                            UpdateQuery = '''UPDATE Snapshots SET conclusion=%s WHERE user_id=%s and id=%s'''
-                            cursor.execute(UpdateQuery, (content["conclusion"], current_user_id, id,))
-                            cursor.commit()
-                    if "favorite" in content:
-                        if content["favorite"] != data[8] and content["favorite"]:
-                            UpdateQuery = '''UPDATE Snapshots SET favorite=%s WHERE user_id=%s and id=%s'''
-                            cursor.execute(UpdateQuery, (content["favorite"], current_user_id, id,))
-                            cursor.commit()
-                    if "note" in content:
-                        if content["note"] != data[1] and content["note"]:
-                            UpdateQuery = '''UPDATE Snapshots SET note=%s WHERE user_id=%s and id=%s'''
-                            cursor.execute(UpdateQuery, (content["note"], current_user_id, id,))
-                            cursor.commit()
-                    if "status" in content:
-                        if content["status"] != data[2] and content["status"]:
-                            UpdateQuery = '''UPDATE Snapshots SET status=%s WHERE user_id=%s and id=%s'''
-                            cursor.execute(UpdateQuery, (content["status"], current_user_id, id,))
-                            cursor.commit()
+            if user_info['id'] == data['user_id'] or user_info['role_id'] == 1:
+                if content:
+                    try:
+                        if "image_path" in content:
+                            if content["image_path"] != data[3] and content["image_path"]:
+                                UpdateQuery = '''UPDATE Snapshots SET image_path=%s WHERE id=%s'''
+                                cursor.execute(UpdateQuery, (content["image_path"], id,))
+                                cursor.commit()
+                        if "mask_path" in content:
+                            if content["mask_path"] != data[4] and content["mask_path"]:
+                                UpdateQuery = '''UPDATE Snapshots SET mask_path=%s WHERE id=%s'''
+                                cursor.execute(UpdateQuery, (content["mask_path"], id,))
+                                cursor.commit()
+                        if "conclusion" in content:
+                            if content["conclusion"] != data[5] and content["conclusion"]:
+                                UpdateQuery = '''UPDATE Snapshots SET conclusion=%s WHERE id=%s'''
+                                cursor.execute(UpdateQuery, (content["conclusion"], id,))
+                                cursor.commit()
+                        if "favorite" in content:
+                            if content["favorite"] != data[8] and content["favorite"]:
+                                UpdateQuery = '''UPDATE Snapshots SET favorite=%s WHERE id=%s'''
+                                cursor.execute(UpdateQuery, (content["favorite"], id,))
+                                cursor.commit()
+                        if "note" in content:
+                            if content["note"] != data[1] and content["note"]:
+                                UpdateQuery = '''UPDATE Snapshots SET note=%s WHERE id=%s'''
+                                cursor.execute(UpdateQuery, (content["note"], id,))
+                                cursor.commit()
+                        if "status" in content:
+                            if content["status"] != data[2] and content["status"]:
+                                UpdateQuery = '''UPDATE Snapshots SET status=%s WHERE id=%s'''
+                                cursor.execute(UpdateQuery, (content["status"], id,))
+                                cursor.commit()
 
-                    UpdateQuery = '''UPDATE Snapshots SET created_at=% WHERE user_id=%s and id=%s'''
-                    cursor.execute(UpdateQuery, (datetime.datetime.now(), current_user_id, id))
-                    cursor.commit()
+                        UpdateQuery = '''UPDATE Snapshots SET created_at=%s WHERE id=%s'''
+                        cursor.execute(UpdateQuery, (datetime.datetime.now(), id))
+                        cursor.commit()
 
-                    return jsonify({"response": "Updated successfully!"})
-                except Exception as e:
-                    print("Error: " + str(e))
-                    return jsonify({"response": "Error: " + str(e)})
+                        return jsonify({"response": "Updated successfully!"})
+                    except Exception as e:
+                        print("Error: " + str(e))
+                        return jsonify({"response": "Error: " + str(e)})
+                else:
+                    flash('Please fill out the form!')
+                    return jsonify({"response": "Please, fill out the form!"})
             else:
-                flash('Please fill out the form!')
-                return jsonify({"response": "Please, fill out the form!"})
-
+                return  jsonify({"response": "Record not found"}), 400
         except Exception as e:
             flash("Error: "+str(e))
             return jsonify({"response": "Error: " + str(e)})
@@ -593,16 +607,22 @@ def upload_obj(current_user_id):
                 cursor.execute(query, (current_user_id,))
                 data = cursor.fetchone()
                 username = data[1]
-                cos.upload_file(os.path.join(app.config['UPLOAD_FOLDER'], filename), bucket_name, username + '/images/' + filename)
-                img_url = get_obj_url(bucket_name=bucket_name, id=username + '/images/' + filename)
+
+                upload_folder = app.config['UPLOAD_FOLDER']
+                img_url = os.path.join(upload_folder, filename)
+                # cos.upload_file(os.path.join(app.config['UPLOAD_FOLDER'], filename), bucket_name, username + '/images/' + filename)
+                # img_url = get_obj_url(bucket_name=bucket_name, id=username + '/images/' + filename)
 
                 created_at = datetime.datetime.now()
 
                 insert_query = '''INSERT INTO Snapshots (user_id, image_path, created_at) VALUES (%s, %s, %s)'''
                 cursor.execute(insert_query, (current_user_id, img_url, created_at,))
                 cursor.commit()
+
+                send_for_inference(cursor.lastrowid, img_url)
+
                 return jsonify({"message":"File uploaded successfully!",
-                                "image URL in Cloud Storage": img_url})
+                                "image_url": img_url})
             else:
                 return jsonify({"response": "Wrong type of selected file"})
 

@@ -23,6 +23,8 @@ services:
       - INFERENCE_EXCHANGE_NAME=inference
       - WEIGHTS_PATH=/app/weights/efficientnetb0.h5
       - API_URL=http://app:5000/
+      - API_USER=inference
+      - API_PASSWORD=d38a068fd7943a39c6feef268f065e5132eb9d3328485339f6d81b282d2e235a
     volumes:
       - ./ml/weights/:/app/weights/:ro
     restart: on-failure
@@ -30,7 +32,42 @@ services:
       - rabbitmq
     networks:
       - rabbitmq_net
+      - api_net
+
+  app:
+    hostname: app
+    build: ./api/
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - INFERENCE_EXCHANGE_NAME=inference
+      - UPLOAD_FOLDER=static
+    ports:
+      - 5090:5000
+    volumes:
+      - ./api/static:/app/static
+    networks:
+      - mysql_net
+      - api_net
+      - rabbitmq_net
+
+  db:
+    image: mysql:8.0.30
+    hostname: db
+    ports:
+      - 30000:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d/:ro
+    networks:
+      - mysql_net
     
 networks:
   rabbitmq_net:
+    driver: bridge
+
+  mysql_net:
+    driver: bridge
+
+  api_net:
     driver: bridge

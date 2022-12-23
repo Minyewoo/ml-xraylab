@@ -3,14 +3,19 @@ import logging
 import sys
 from inference_config import InferenceConfig
 import pika
-from utils import get_image, save_to_bucket
 from predict import predict_diseases
+import requests
 
 def inference_callback(ch, method, properties, body):
+    config = InferenceConfig()
     payload = json.loads(body)
-    snapshot_url = get_image(payload['snapshot_url'])
-    predictions, heatmaped_image = predict_diseases(snapshot_url)
-    mask_url = save_to_bucket(heatmaped_image)
+    snapshot_id = payload['snapshot_id']
+    snapshot_path = payload['snapshot_path']
+    snapshot_url = f'{config.api_url}/{snapshot_path}' 
+
+    # predictions, heatmaped_image = predict_diseases(snapshot_url, config)
+    # requests.post(f'/home/user_snapshots/{snapshot_id}', data={} )
+    # mask_url = save_to_bucket(heatmaped_image)
     
     ch.basic_ack(delivery_tag = method.delivery_tag)
 

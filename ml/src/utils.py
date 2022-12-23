@@ -60,6 +60,3 @@ def apply_heatmap(img, heatmap, alpha=0.4):
     superimposed_img = jet_heatmap * alpha + img
     superimposed_img = tf.keras.utils.array_to_img(superimposed_img)
     return superimposed_img
-
-def save_to_bucket(image):
-    pass

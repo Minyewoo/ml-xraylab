@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_mysql_connector import MySQL
 from flask_cors import CORS
-
+from os import getenv
 # # Initiating login manager options
 # login_manager = LoginManager()
 # login_manager.session_protection = "strong"
@@ -28,7 +28,7 @@ def create_app():
     app.config['MYSQL_DATABASE'] = 'xraylab'
     app.config['SECRET_KEY'] = 'secret key'
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000
-    app.config['UPLOAD_FOLDER'] = 'C:/Users/user/Downloads'
+    app.config['UPLOAD_FOLDER'] = getenv('UPLOAD_FOLDER', 'static')
 
 
     # Intialize MySQL
