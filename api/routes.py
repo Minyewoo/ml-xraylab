@@ -15,6 +15,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 # from FileServer import cos, get_obj_url
 from app import create_app
 import traceback
+import uuid
 ############################################################################
 ###   Section dedicated to file extensions and checking file extension   ###
 ############################################################################
@@ -51,7 +52,7 @@ def token_required(f):
             try:
                 data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
             except jwt.ExpiredSignatureError:
-                return jsonify({"message": "Token has expired"})
+                return jsonify({"message": "Token has expired"}), 401
             print("Data: ", data)
             print("Data ID: ", data['id'])
             query = '''SELECT * FROM Users WHERE id = %s'''
@@ -70,7 +71,7 @@ def token_required(f):
         except Exception as e:
             return jsonify({
                 'message': 'Error: ' + str(e)
-            })
+            }), 401
         finally:
             cursor.close()
 
@@ -117,7 +118,8 @@ def add_mask(snapshot_id):
             return jsonify({"response": "No selected file"})
 
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
+            filename = str(uuid.uuid4()) + '.png'
+            # filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             cursor = mysql.connection.cursor()
             upload_folder = app.config['UPLOAD_FOLDER']
@@ -131,6 +133,21 @@ def add_mask(snapshot_id):
                                 "image_url": img_url})
 
 
+
+@app.route("/add_predictions/<int:snapshot_id>", methods=("GET", "POST"), strict_slashes=False)
+def add_predictions(snapshot_id):
+    if request.method == 'POST':
+        cursor = mysql.connection.cursor()
+
+        content = request.get_json()
+        UpdateQuery = '''UPDATE Snapshots SET conclusion=%s, status=%s WHERE id=%s'''
+        cursor.execute(UpdateQuery, (content["conclusion"], 'fulfilled', snapshot_id,))
+        mysql.connection.commit()
+        
+        cursor.close()
+            
+        return jsonify({"message":"Predictions uploaded successfully!"})
+ 
 ########################################
 ###   Function that performs Login   ###
 ########################################
@@ -612,13 +629,14 @@ def upload_obj(current_user_id):
         return jsonify({"message": "Upload object destination is reachable"})
 
     elif request.method == 'POST':
+        cursor = mysql.connection.cursor()
         try:
             print("Request.Files: ", request.files)
             if "" not in request.files:
                 flash('No file part')
                 # return redirect(request.url)
                 return jsonify({"response": "No file part"})
-
+            print(request.files)
             file = request.files['']
 
             if file.filename == '':
@@ -627,9 +645,9 @@ def upload_obj(current_user_id):
                 return jsonify({"response": "No selected file"})
 
             if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
+                filename = str(uuid.uuid4())  + '.png'
+                # filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                cursor = mysql.connection.cursor()
                 query = '''SELECT * FROM Users WHERE id=%s'''
                 cursor.execute(query, (current_user_id,))
                 data = cursor.fetchone()

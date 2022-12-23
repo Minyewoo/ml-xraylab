@@ -24,19 +24,19 @@ def inference_callback(ch, method, properties, body):
         mask_response = requests.post(mask_aquisition_url, files=files)
         logging.critical(f'Mask uploading sucseeded: {mask_response.ok}')
     
-    token = requests.post(
-        f'{config.api_url}/login',
-        data={
-            'username': config.api_user,
-            'password': config.api_password,
-        },
-    )['token']
+    # token = requests.post(
+    #     f'{config.api_url}/login',
+    #     data={
+    #         'username': config.api_user,
+    #         'password': config.api_password,
+    #     },
+    # ).json()['token']
     
-    mask_aquisition_url = f'{config.api_url}/add_mask/{snapshot_id}'
+    preds_aquisition_url = f'{config.api_url}/add_predictions/{snapshot_id}'
     preds_response = requests.post(
-        mask_aquisition_url, 
-        headers={'Authorization': f'Bearer {token}'},
-        data={'conclusion': json.dumps(predictions)}
+        preds_aquisition_url, 
+        # headers={'Authorization': f'Bearer {token}'},
+        json={'conclusion': json.dumps(predictions)}
     )
 
     logging.critical(f'Predictions sending sucseeded: {preds_response.ok}')
