@@ -178,6 +178,7 @@ def register():
             content = request.get_json(silent=True)
             exist_query = '''SELECT * FROM Users WHERE username = %s'''
             # cursor.execute(exist_query, (username,))
+            # print(content['username'])
             cursor.execute(exist_query, (content['username'],))
             account = cursor.fetchone()
             print("Account: ", account)
@@ -204,8 +205,8 @@ def register():
 
 
                 # Create folders for images and masks of the user automatically in Cloud Storage
-                cos.put_object(Bucket=bucket_name, Key=(str(content['username']) + '/images'))
-                cos.put_object(Bucket=bucket_name, Key=(str(content['username']) + '/masks'))
+                # cos.put_object(Bucket=bucket_name, Key=(str(content['username']) + '/images'))
+                # cos.put_object(Bucket=bucket_name, Key=(str(content['username']) + '/masks'))
 
                 jwtQuery = '''SELECT * FROM Users WHERE username=%s'''
                 cursor.execute(jwtQuery, (content['username'],))
@@ -441,8 +442,8 @@ def list_snapshots(current_user_id):
             flash("All User's snapshots successfully loaded")
             data = cursor.fetchall()
             print("Snapshots data: ", data)
-            print(data[0])
-            print(type(data))
+            # print(data[0])
+            # print(type(data))
             data_list = []
             for row in data:
                 data_dict = {
@@ -461,6 +462,7 @@ def list_snapshots(current_user_id):
         except Exception as e:
             flash('Error: ' + str(e))
             print('Error: ' + str(e))
+            return jsonify({"response": "Error: " + str(e)})
         finally:
             cursor.close()
     if request.method == 'POST':
@@ -628,4 +630,5 @@ def logout():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=True, host='0.0.0.0', port=port)

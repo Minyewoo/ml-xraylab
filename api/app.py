@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_mysql_connector import MySQL
+from flask_cors import CORS
 
 # # Initiating login manager options
 # login_manager = LoginManager()
@@ -14,12 +15,14 @@ from flask_mysql_connector import MySQL
 
 def create_app():
     app = Flask(__name__)
+    CORS(app)
 
     # Change this to your secret key (can be anything, it's for extra protection)
     app.secret_key = 'your secret key'
 
     # Enter your database connection details below
-    app.config['MYSQL_HOST'] = 'localhost'
+    app.config['MYSQL_HOST'] = 'db'
+    app.config['MYSQL_PORT'] = '3306'
     app.config['MYSQL_USER'] = 'root'
     app.config['MYSQL_PASSWORD'] = 'root'
     app.config['MYSQL_DATABASE'] = 'xraylab'
