@@ -31,24 +31,25 @@ func Login(db *sql.DB, jwtKey []byte) func(w http.ResponseWriter, r *http.Reques
 			return
 		}
 
+		if creds.Password == "" || creds.Username == "" {
+			err = fmt.Errorf("password or username was empty")
+			utils.WriteErrorResponse(w, err, http.StatusUnauthorized)
+			return
+		}
+
 		user, err := utils.FindUserByUsername(db, creds.Username)
 		if err != nil {
 			log.Println(err)
-			utils.WriteErrorResponse(w, err, http.StatusBadRequest)
+			utils.WriteErrorResponse(w, err, http.StatusUnauthorized)
 			return
 		}
 
-		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(creds.Password), bcrypt.MinCost)
+		err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(creds.Password))
 		if err != nil {
-			log.Println(err)
-			utils.WriteErrorResponse(w, err, http.StatusInternalServerError)
-			return
-		}
-
-		if user.Password != string(hashedPassword) {
 			err = fmt.Errorf("wrong password")
 			log.Println(err)
-			utils.WriteErrorResponse(w, err, http.StatusBadRequest)
+			utils.WriteErrorResponse(w, err, http.StatusUnauthorized)
+			return
 		}
 
 		tokenString, err := utils.CreateNewJwtToken(user, jwtKey)

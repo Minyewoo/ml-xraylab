@@ -1,12 +1,11 @@
-FROM golang:1.20
-
-WORKDIR /usr/src/app
-
-# pre-copy/cache go.mod for pre-downloading dependencies and only redownloading them in subsequent builds if they change
-COPY go.mod go.sum ./
+FROM golang:1.20 
+RUN mkdir /app
+ADD  . /app
+WORKDIR /app
+# RUN echo $(ls -1 /app)
 RUN go mod download && go mod verify
-
-COPY . .
-RUN go build -v -o /usr/local/bin/app ./...
-
-CMD ["app"]
+RUN go build -o app /app/cmd
+# CMD ["go", "run", "./cmd/main.go"]
+# RUN ./main
+# RUN echo $(ls -1 /app)
+CMD [ "./app" ] 

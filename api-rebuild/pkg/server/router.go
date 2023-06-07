@@ -18,9 +18,9 @@ func SetupRouter(db *sql.DB) *mux.Router {
 	r.HandleFunc("/register", routes.Register(db, jwtKey)).Methods("POST")
 	// r.HandleFunc("/home").Methods("GET")
 	// r.HandleFunc("/home/update").Methods("POST")
-	// r.HandleFunc("/home/upload_image").Methods("POST")
-	// r.HandleFunc("/home/user_snapshots").Methods("GET")
-	// r.HandleFunc("/home/user_snapshots/{id}").Methods("POST", "GET")
+	r.HandleFunc("/home/upload_image", routes.UploadImage(db, jwtKey)).Methods("POST")
+	r.HandleFunc("/home/user_snapshots", routes.GetUserSnapshots(db, jwtKey)).Methods("GET")
+	r.HandleFunc("/home/user_snapshots/{id:[0-9]+}", routes.UserSnapshotById(db, jwtKey)).Methods("POST", "GET")
 
 	fileServer := http.FileServer(http.Dir("./static/"))
 	r.PathPrefix("/files/").Handler(http.StripPrefix("/files/", fileServer))

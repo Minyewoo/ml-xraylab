@@ -56,7 +56,9 @@ function Routes() {
                 path={snapshotsUploadPath}
                 component={SnapshotUploadPage}
             />
-            <Route path="/" element={<Redirect to={profilePath} />} />
+            <Route exact path="/">
+                <Redirect to={authPath} />
+            </Route>
         </Switch>
     );
 }

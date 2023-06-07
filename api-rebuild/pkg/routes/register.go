@@ -3,6 +3,7 @@ package routes
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"log"
 	"ml-xraylab/api-rebuild/pkg/models"
 	utils "ml-xraylab/api-rebuild/pkg/utils"
@@ -33,6 +34,12 @@ func Register(db *sql.DB, jwtKey []byte) func(w http.ResponseWriter, r *http.Req
 			return
 		}
 
+		if creds.Password == "" || creds.Username == "" || creds.Email == "" {
+			err = fmt.Errorf("password, username or email was empty")
+			utils.WriteErrorResponse(w, err, http.StatusUnauthorized)
+			return
+		}
+
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(creds.Password), bcrypt.MinCost)
 		if err != nil {
 			log.Println(err)
@@ -48,7 +55,7 @@ func Register(db *sql.DB, jwtKey []byte) func(w http.ResponseWriter, r *http.Req
 		})
 		if err != nil {
 			log.Println(err)
-			utils.WriteErrorResponse(w, err, http.StatusBadRequest)
+			utils.WriteErrorResponse(w, err, http.StatusConflict)
 			return
 		}
 

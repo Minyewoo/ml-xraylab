@@ -36,7 +36,7 @@ services:
 
   app:
     hostname: app
-    build: ./api/
+    build: ./api-rebuild/
     environment:
       - RABBITMQ_HOST=rabbitmq
       - INFERENCE_EXCHANGE_NAME=inference
@@ -44,8 +44,7 @@ services:
     ports:
       - 4999:5000
     volumes:
-      - ./api/:/app/
-      # - ./api/static:/app/static
+      - ./api-rebuild/static:/app/static
     restart: on-failure
     networks:
       - mysql_net
@@ -57,12 +56,23 @@ services:
     hostname: db
     environment:
       - MYSQL_ROOT_PASSWORD=root
+    # ports:
+    #   - 3306:3306
     restart: on-failure
     volumes:
       - ./db:/docker-entrypoint-initdb.d/:ro
     networks:
       - mysql_net
-    
+
+  web-app-frontend:
+    build:
+        context: ./web-app
+        dockerfile: Dockerfile
+        args:
+            - REACT_APP_API_URL=http://localhost:4999
+    ports:
+        - 3040:80
+
 networks:
   rabbitmq_net:
     driver: bridge

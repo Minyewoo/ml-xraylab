@@ -17,7 +17,7 @@ func ReadConfigFromEnvironment() *ApiConfig {
 	return &ApiConfig{
 		RabbitMqHost:          getEnvOrDefault("RABBITMQ_HOST", "localhost"),
 		InferenceExchangeName: getEnvOrDefault("INFERENCE_EXCHANGE_NAME", "inference"),
-		ServingAddress:        getEnvOrDefault("SERVING_ADDRESS", "0.0.0.0:80"),
+		ServingAddress:        getEnvOrDefault("SERVING_ADDRESS", "0.0.0.0:5000"),
 	}
 }
 

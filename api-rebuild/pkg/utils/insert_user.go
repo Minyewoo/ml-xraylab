@@ -13,14 +13,15 @@ func InsertUser(db *sql.DB, user *models.User) (*models.User, error) {
 	}
 
 	query := fmt.Sprintf(
-		"INSERT INTO Users(username, password, e_mail, role_id) VALUES (%s, %s, %s, %d)",
+		"INSERT INTO Users(username, password, e_mail, role_id) VALUES ('%s', '%s', '%s', %d)",
 		user.Username, user.Password, user.Email, user.RoleId,
 	)
 	result, err := db.Query(query)
 	if err != nil {
 		return nil, err
 	}
-	defer result.Close()
+	result.Next()
+	result.Close()
 
 	return FindUserByUsername(db, user.Username)
 }
